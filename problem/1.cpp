@@ -38,7 +38,11 @@ public:
 int main() {
     Solution sol;
     // Add test cases here
-    
+    // case 1: 1 2 3, 4
+    vector<int> nums = {1, 2, 3};
+    int target = 4;
+    vector<int> res = sol.twoSum(nums, target);
+    for (int x : res) cout << x << " ";
     return 0;
 }
 #endif
