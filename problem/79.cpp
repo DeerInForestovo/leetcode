@@ -10,8 +10,13 @@ To Copilot:
 class Solution {
 public:
     // trie
+    static int charToNum(char c) {
+        // lower or upper
+        if (c >= 'a' && c <= 'z') return c - 'a';
+        return c - 'A' + 26;
+    }
     struct TrieNode {
-        TrieNode* next[26];
+        TrieNode* next[52];
         int isEnd;  // id
         int size;
         TrieNode() {
@@ -22,7 +27,7 @@ public:
         void insert(const string& word, int id) {
             TrieNode* node = this;
             for (char c: word) {
-                int idx = c - 'a';
+                int idx = charToNum(c);
                 if (!node->next[idx]) node->next[idx] = new TrieNode();
                 node = node->next[idx];
                 node->size++;
@@ -32,7 +37,7 @@ public:
         void remove(const string& word) {
             TrieNode* node = this;
             for (char c: word) {
-                int idx = c - 'a';
+                int idx = charToNum(c);
                 if (!node->next[idx]) return;
                 node = node->next[idx];
                 node->size--;
@@ -52,13 +57,14 @@ public:
             int nx = x + dx[i], ny = y + dy[i];
             if (nx < 0 || nx >= n || ny < 0 || ny >= m || vis[nx][ny]) continue;
             char c = board[nx][ny];
-            int idx = c - 'a';
+            int idx = charToNum(c);
             if (!cur->next[idx] || cur->next[idx]->size == 0) continue;
             dfs(nx, ny, n, m, cur->next[idx], vis, result, board, words);
         }
         vis[x][y] = false;
     }
-    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+    bool exist(vector<vector<char>>& board, string word) {
+        vector<string> words = {word};
         int n = board.size();
         int m = board[0].size();
         vector<vector<bool>> vis(n, vector<bool>(m, false));
@@ -69,14 +75,14 @@ public:
         for (int i = 0; i < n; ++i)
             for (int j = 0; j < m; ++j) {
                 char c = board[i][j];
-                int idx = c - 'a';
+                int idx = charToNum(c);
                 if (root->next[idx] && root->next[idx]->size > 0) {
                     vis[i][j] = true;
                     dfs(i, j, n, m, root->next[idx], vis, result, board, words);
                     vis[i][j] = false;
                 }
             }
-        return result;
+        return result.size() > 0;
     }
 };
 
